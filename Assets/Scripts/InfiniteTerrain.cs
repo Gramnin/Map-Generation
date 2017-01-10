@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class InfiniteTerrain : MonoBehaviour {
 
+    const float scale = 120f;
+
     const float viewerMoveThresholdForChunkUpdate = 25f;
     const float sqrViewerMoveThresholdForChunkUpdate = viewerMoveThresholdForChunkUpdate * viewerMoveThresholdForChunkUpdate;
 
@@ -20,7 +22,7 @@ public class InfiniteTerrain : MonoBehaviour {
     int chunksVisibleinViewDist;
 
     Dictionary<Vector2, TerrainChunk> terrainChunkDictionary = new Dictionary<Vector2, TerrainChunk>();
-    List<TerrainChunk> terrainChunksVisibleLastUpdate = new List<TerrainChunk>();
+    static List<TerrainChunk> terrainChunksVisibleLastUpdate = new List<TerrainChunk>();
 
     void Start()
     {
@@ -35,7 +37,7 @@ public class InfiniteTerrain : MonoBehaviour {
 
     void Update()
     {
-        viewerPosition = new Vector2(viewer.position.x, viewer.position.z);
+        viewerPosition = new Vector2(viewer.position.x, viewer.position.z) / scale;
         if ((viewerPositionOld - viewerPosition).sqrMagnitude > sqrViewerMoveThresholdForChunkUpdate)
         {
             updateVisibleChunks();
@@ -65,10 +67,6 @@ public class InfiniteTerrain : MonoBehaviour {
                 if (terrainChunkDictionary.ContainsKey(viewedChunkCoord))
                 {
                     terrainChunkDictionary[viewedChunkCoord].UpdateTerrainChunk();
-                    if (terrainChunkDictionary[viewedChunkCoord].isVisible())
-                    {
-                        terrainChunksVisibleLastUpdate.Add(terrainChunkDictionary[viewedChunkCoord]);
-                    }
                 }
                 else
                 {
@@ -108,8 +106,9 @@ public class InfiniteTerrain : MonoBehaviour {
             meshFilter = meshObject.AddComponent<MeshFilter>();
             meshRenderer.material = material;
 
-            meshObject.transform.position = positionV3;
+            meshObject.transform.position = positionV3 * scale;
             meshObject.transform.parent = parent;
+            meshObject.transform.localScale = Vector3.one * scale;
             setVisible(false);
 
             lodMeshes = new LODMesh[detailLevels.Length];
@@ -173,6 +172,7 @@ public class InfiniteTerrain : MonoBehaviour {
                             lodMesh.RequestMesh(mapData);
                         }
                     }
+                    terrainChunksVisibleLastUpdate.Add(this);
                 }
 
                 setVisible(visible);
