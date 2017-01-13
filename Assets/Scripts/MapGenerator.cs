@@ -124,7 +124,7 @@ public class MapGenerator : MonoBehaviour {
                 float currentHeight = noisemap[x, y];
                 for (int i = 0; i < regions.Length; i++)
                 {
-                    if (currentHeight > regions[i].height)
+                    if (currentHeight >= regions[i].height)
                     {
                         colorMap[y * mapChunkSize + x] = regions[i].color;
                     }

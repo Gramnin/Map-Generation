@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class InfiniteTerrain : MonoBehaviour {
 
-    const float scale = 120f;
+    const float scale = 12f;
 
     const float viewerMoveThresholdForChunkUpdate = 25f;
     const float sqrViewerMoveThresholdForChunkUpdate = viewerMoveThresholdForChunkUpdate * viewerMoveThresholdForChunkUpdate;
